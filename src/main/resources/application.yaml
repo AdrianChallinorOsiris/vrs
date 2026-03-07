@@ -1,0 +1,22 @@
+
+spring:
+  application:
+    name: VRS
+    version: @project.version@
+  datasource:
+    url: jdbc:postgresql://bastet:5432/adrian
+    username: adrian
+    password: Beds1tter
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  flyway:
+    enabled: true
+    schemas: vrs
+    default-schema: vrs
+    baseline-on-migrate: true
