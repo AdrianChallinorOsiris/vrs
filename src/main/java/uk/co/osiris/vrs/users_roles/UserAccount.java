@@ -41,6 +41,9 @@ public class UserAccount {
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
 
+	@Column(name = "is_active", nullable = false)
+	private boolean isActive;
+
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 

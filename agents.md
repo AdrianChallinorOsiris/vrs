@@ -30,3 +30,8 @@ public int hashCode() {
   ```java
   return userId != null && roleId != null && userId.equals(other.userId) && roleId.equals(other.roleId);
   ```
+# Each collection of domain related classes is to be in its own package
+
+For example, all class to do with the Company should reside in the 
+company package. This includes entity, repository, controller, service 
+

@@ -36,7 +36,8 @@ VALUES
   ('ROLE_VESSEL', 'The vessel itself'),
   ('ROLE_AGENT', 'Port agent'),
   ('ROLE_BUNKER_SUPPLIER', 'Bunker supplier'),
-  ('ROLE_TECHNICAL_MANAGER', 'Technical manager')
+  ('ROLE_TECHNICAL_MANAGER', 'Technical manager'), 
+  ('ROLE_USER', 'User')
 ;
 -- todo: 
 -- add created_at
@@ -49,6 +50,7 @@ CREATE TABLE  IF NOT EXISTS vrs.user_account (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     company_id BIGINT NOT NULL REFERENCES vrs.company(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

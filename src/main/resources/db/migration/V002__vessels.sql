@@ -38,14 +38,6 @@ CREATE TABLE IF NOT EXISTS vrs.fleet (
 -- =========================
 -- Fleet Vessel (Fleet consists of vessels)
 -- =========================
-CREATE TABLE IF NOT EXISTS vrs.fleet_vessel (
-    fleet_id BIGINT NOT NULL REFERENCES vrs.fleet(id),
-    vessel_id BIGINT NOT NULL REFERENCES vrs.vessel(id),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (fleet_id, vessel_id)
-);
-
 CREATE TABLE IF NOT EXISTS vrs.vessel_fleet_assignment (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
