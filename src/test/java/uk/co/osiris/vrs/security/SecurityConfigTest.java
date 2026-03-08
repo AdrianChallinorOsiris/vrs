@@ -16,6 +16,7 @@ import uk.co.osiris.vrs.company.CompanyService;
 import uk.co.osiris.vrs.company.UserCompanyController;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,6 +44,7 @@ class SecurityConfigTest {
         company.setName("Test");
         company.setEmail("test@example.com");
         when(companyService.findById(1L)).thenReturn(company);
+        when(companyService.findByUserEmail(eq("user"))).thenReturn(company);
         when(companyService.create(any())).thenReturn(company);
     }
 
@@ -67,6 +69,13 @@ class SecurityConfigTest {
     @Test
     void userWithRoleUserCanAccessUserPaths() throws Exception {
         mockMvc.perform(get("/user/v1/companies/1")
+                        .with(user("user").roles("USER")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void userWithRoleUserCanAccessCurrentCompany() throws Exception {
+        mockMvc.perform(get("/user/v1/companies/me")
                         .with(user("user").roles("USER")))
                 .andExpect(status().isOk());
     }

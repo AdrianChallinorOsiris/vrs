@@ -1,8 +1,14 @@
--- V1__initial_schema.sql
--- Initial schema for VRS project
+-- Create schema
+CREATE SCHEMA IF NOT EXISTS vrs;
 
--- Create schema if it doesn't exist
-CREATE SCHEMA IF NOT EXISTS vrs AUTHORIZATION adrian;
+-- Ensure schema is first in search path
+SET search_path TO vrs, public;
+
+-- ------------------------------------------------------------
+-- Extensions
+-- ------------------------------------------------------------
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- Company table
 CREATE TABLE  IF NOT EXISTS vrs.company (
@@ -58,7 +64,7 @@ CREATE TABLE  IF NOT EXISTS vrs.user_account (
 
 -- Insert initial user
 INSERT INTO vrs.user_account (email, password_hash, company_id)
-SELECT 'adrian.challinor@osiris.co.uk', crypt('Beds1tterImage$', gen_salt('bf')), id 
+SELECT 'adrian.challinor@osiris.co.uk', '$2a$12$rIyF3ezLN5WkLyhnwiosjesEfG1KuQolQ/dvYrnQI8uk6Zj/hgURK', id
 FROM vrs.company
 WHERE name = 'Osiris';
 
@@ -75,4 +81,4 @@ INSERT INTO vrs.user_role (user_id, role_id)
 SELECT U.id, R.id
 FROM vrs.user_account U, vrs.role R
 WHERE U.email = 'adrian.challinor@osiris.co.uk' 
-AND R.name = 'ROLE_ADMIN';
+AND R.name in ('ROLE_ADMIN', 'ROLE_USER');

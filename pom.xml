@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>uk.co.osiris</groupId>
 	<artifactId>vrs</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<name>VRS</name>
 	<description>Vessel Reporting System Server</description>
 	<url/>

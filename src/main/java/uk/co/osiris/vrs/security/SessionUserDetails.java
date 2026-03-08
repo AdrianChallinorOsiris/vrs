@@ -1,6 +1,8 @@
 package uk.co.osiris.vrs.security;
 
 import java.util.Collection;
+import java.util.Optional;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import uk.co.osiris.vrs.users_roles.Role;
 import uk.co.osiris.vrs.users_roles.UserAccount;
 import uk.co.osiris.vrs.users_roles.UserAccountRepository;
 import uk.co.osiris.vrs.users_roles.UserRole;
@@ -38,12 +41,7 @@ public class SessionUserDetails implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		UserAccount userAccount = userAccountRepository.findByEmail(userName);
-
-		if (userAccount == null) {
-			log.warn("User not found! {}", userName);
-			throw new UsernameNotFoundException("user " + userName + " not found");	
-		}
+		UserAccount userAccount = userAccountRepository.findByEmailWithRoles(userName).orElseThrow(() -> new UsernameNotFoundException("user " + userName + " not found") );
 		if (!userAccount.isActive()) {
 			log.warn("User is inactive! {}", userName);
 			throw new UsernameNotFoundException("user " + userName + " not found!");	
@@ -51,12 +49,11 @@ public class SessionUserDetails implements UserDetailsService {
 		
 		// Get roles 
 		String[] userRoles = 
-        userAccount.getUserRoles().stream().map(UserRole::getRole).toArray(String[]::new);
+        userAccount.getUserRoles().stream().map(UserRole::getRole).map(Role::getName).toArray(String[]::new);
 		Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
 		log.info("User {} granted access with roles {} ", userAccount.getEmail(), authorities);
 
-		User user = new User(userAccount.getEmail(), userAccount.getPasswordHash(), authorities);
-		return user;
+        return new User(userAccount.getEmail(), userAccount.getPasswordHash(), authorities);
 	}  
 
 }

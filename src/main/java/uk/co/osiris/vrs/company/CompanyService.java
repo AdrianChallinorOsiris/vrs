@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.co.osiris.vrs.users_roles.UserAccountRepository;
 
 import java.util.List;
 
@@ -14,6 +15,16 @@ public class CompanyService {
 
 	private final CompanyRepository companyRepository;
 	private final CompanyMapper companyMapper;
+	private final UserAccountRepository userAccountRepository;
+
+	@Transactional(readOnly = true)
+	public CompanyDto findByUserEmail(String email) {
+		var userAccount = userAccountRepository.findByEmail(email);
+		if (userAccount == null || userAccount.getCompany() == null) {
+			return null;
+		}
+		return companyMapper.toDto(userAccount.getCompany());
+	}
 
 	@Transactional(readOnly = true)
 	public CompanyDto findById(Long id) {
