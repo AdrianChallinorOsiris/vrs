@@ -17,8 +17,9 @@ INSERT INTO vrs.vessel_type (name) VALUES ('Tanker'), ('Container Ship'), ('Gene
 CREATE TABLE IF NOT EXISTS vrs.vessel(
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    imo_number char(7) NOT NULL UNIQUE CHECK (imo_number ~ '^[0-9]{7}$'),
+    imo_number VARCHAR(7) NOT NULL UNIQUE CHECK (imo_number ~ '^[0-9]{7}$'),
     vessel_type_id BIGINT NOT NULL REFERENCES vrs.vessel_type(id),
+    active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

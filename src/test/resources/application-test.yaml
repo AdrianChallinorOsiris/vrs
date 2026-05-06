@@ -1,0 +1,7 @@
+# Test profile - uses vrstest database
+# Create with: CREATE DATABASE vrstest;
+spring:
+  datasource:
+    url: jdbc:postgresql://bastet:5432/vrstest
+    username: adrian
+    password: Beds1tter

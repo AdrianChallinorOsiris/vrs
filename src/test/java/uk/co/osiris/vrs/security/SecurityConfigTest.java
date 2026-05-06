@@ -3,11 +3,13 @@ package uk.co.osiris.vrs.security;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.autoconfigure.web.DataWebAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.co.osiris.vrs.company.AdminCompanyController;
@@ -23,9 +25,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = {UserCompanyController.class, AdminCompanyController.class})
+@WebMvcTest(controllers = {UserCompanyController.class, AdminCompanyController.class},
+        excludeAutoConfiguration = DataWebAutoConfiguration.class)
 @AutoConfigureMockMvc(addFilters = true)
-@Import(SecurityConfig.class)
+@ContextConfiguration(classes = {
+        SecurityTestConfig.class,
+        UserCompanyController.class,
+        AdminCompanyController.class
+})
 class SecurityConfigTest {
 
     @Autowired

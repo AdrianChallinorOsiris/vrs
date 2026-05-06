@@ -37,6 +37,7 @@ CREATE TABLE  IF NOT EXISTS vrs.role (
 INSERT INTO vrs.role (name, description)
 VALUES
   ('ROLE_ADMIN', 'System administrator with full access'),
+  ('ROLE_MANAGER', 'Company manager'),
   ('ROLE_CHARTERER', 'Chartering manager'),
   ('ROLE_OWNER', 'Owner of the vessel'),
   ('ROLE_VESSEL', 'The vessel itself'),
@@ -81,4 +82,4 @@ INSERT INTO vrs.user_role (user_id, role_id)
 SELECT U.id, R.id
 FROM vrs.user_account U, vrs.role R
 WHERE U.email = 'adrian.challinor@osiris.co.uk' 
-AND R.name in ('ROLE_ADMIN', 'ROLE_USER');
+AND R.name in ('ROLE_ADMIN', 'ROLE_USER', 'ROLE_MANAGER');
