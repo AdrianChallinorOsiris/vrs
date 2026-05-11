@@ -2,10 +2,17 @@ package uk.co.osiris.vrs.vessel;
 
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.UUID;
+
 @Component
 public class VesselMapper {
 
 	public VesselDto toDto(Vessel vessel) {
+		return toDto(vessel, List.of());
+	}
+
+	public VesselDto toDto(Vessel vessel, List<VesselNameHistory> nameHistory) {
 		if (vessel == null) {
 			return null;
 		}
@@ -14,10 +21,29 @@ public class VesselMapper {
 		dto.setName(vessel.getName());
 		dto.setImoNumber(vessel.getImoNumber());
 		dto.setActive(vessel.isActive());
+		dto.setAccessToken(vessel.getAccessToken());
 		if (vessel.getVesselType() != null) {
 			dto.setVesselTypeId(vessel.getVesselType().getId());
 			dto.setVesselTypeName(vessel.getVesselType().getName());
 		}
+		if (vessel.getCurrentCompany() != null) {
+			dto.setCurrentCompanyId(vessel.getCurrentCompany().getId());
+			dto.setCurrentCompanyName(vessel.getCurrentCompany().getName());
+		}
+		if (vessel.getMaster() != null) {
+			dto.setMasterId(vessel.getMaster().getId());
+			dto.setMasterEmail(vessel.getMaster().getEmail());
+		}
+		dto.setNameHistory(nameHistory.stream().map(this::toNameHistoryDto).toList());
+		return dto;
+	}
+
+	public VesselNameHistoryDto toNameHistoryDto(VesselNameHistory history) {
+		VesselNameHistoryDto dto = new VesselNameHistoryDto();
+		dto.setId(history.getId());
+		dto.setName(history.getName());
+		dto.setValidFrom(history.getValidFrom());
+		dto.setValidTo(history.getValidTo());
 		return dto;
 	}
 
@@ -33,6 +59,7 @@ public class VesselMapper {
 		vessel.setImoNumber(dto.getImoNumber());
 		vessel.setVesselType(vesselType);
 		vessel.setActive(dto.isActive());
+		vessel.setAccessToken(UUID.randomUUID().toString());
 		return vessel;
 	}
 

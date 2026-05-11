@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.co.osiris.vrs.company.CompanyRepository;
+import uk.co.osiris.vrs.users_roles.UserAccountRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,18 @@ class VesselServiceTest {
 
 	@Mock
 	VesselMapper vesselMapper;
+
+	@Mock
+	VesselNameHistoryRepository nameHistoryRepository;
+
+	@Mock
+	VesselCompanyHistoryRepository companyHistoryRepository;
+
+	@Mock
+	CompanyRepository companyRepository;
+
+	@Mock
+	UserAccountRepository userAccountRepository;
 
 	@InjectMocks
 	VesselService vesselService;
@@ -74,7 +88,8 @@ class VesselServiceTest {
 	@Test
 	void findByIdReturnsVesselWhenFound() {
 		when(vesselRepository.findById(1L)).thenReturn(Optional.of(vessel));
-		when(vesselMapper.toDto(vessel)).thenReturn(vesselDto);
+		when(nameHistoryRepository.findByVesselIdOrderByValidFromDesc(1L)).thenReturn(List.of());
+		when(vesselMapper.toDto(vessel, List.of())).thenReturn(vesselDto);
 
 		VesselDto result = vesselService.findById(1L);
 
@@ -95,7 +110,8 @@ class VesselServiceTest {
 	@Test
 	void findAllReturnsAllVessels() {
 		when(vesselRepository.findAll()).thenReturn(List.of(vessel));
-		when(vesselMapper.toDto(vessel)).thenReturn(vesselDto);
+		when(nameHistoryRepository.findByVesselIdOrderByValidFromDesc(1L)).thenReturn(List.of());
+		when(vesselMapper.toDto(vessel, List.of())).thenReturn(vesselDto);
 
 		List<VesselDto> result = vesselService.findAll();
 
@@ -125,7 +141,8 @@ class VesselServiceTest {
 		when(vesselRepository.findByImoNumber("9074729")).thenReturn(Optional.empty());
 		when(vesselMapper.toEntity(any(), any())).thenReturn(vessel);
 		when(vesselRepository.save(vessel)).thenReturn(vessel);
-		when(vesselMapper.toDto(vessel)).thenReturn(vesselDto);
+		when(nameHistoryRepository.save(any())).thenReturn(new VesselNameHistory());
+		when(vesselMapper.toDto(any(Vessel.class), any())).thenReturn(vesselDto);
 
 		VesselDto result = vesselService.create(requestDto);
 
@@ -147,7 +164,8 @@ class VesselServiceTest {
 	void updateAppliesChangesAndSaves() {
 		when(vesselRepository.findById(1L)).thenReturn(Optional.of(vessel));
 		when(vesselRepository.save(vessel)).thenReturn(vessel);
-		when(vesselMapper.toDto(vessel)).thenReturn(vesselDto);
+		when(nameHistoryRepository.findByVesselIdOrderByValidFromDesc(1L)).thenReturn(List.of());
+		when(vesselMapper.toDto(vessel, List.of())).thenReturn(vesselDto);
 
 		VesselDto result = vesselService.update(1L, updateDto);
 

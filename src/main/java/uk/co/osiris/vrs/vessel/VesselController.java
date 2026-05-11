@@ -65,4 +65,48 @@ public class VesselController {
 			return ResponseEntity.badRequest().build();
 		}
 	}
+
+	@PostMapping("/{id}/rename")
+	@PreAuthorize("hasRole('MANAGER')")
+	@Operation(summary = "Rename vessel (records name history)")
+	public ResponseEntity<VesselDto> rename(@PathVariable Long id, @Valid @RequestBody VesselRenameRequestDto request) {
+		try {
+			return ResponseEntity.ok(vesselService.rename(id, request.getName()));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@PostMapping("/{id}/company")
+	@PreAuthorize("hasRole('ADMIN')")
+	@Operation(summary = "Assign vessel to a company (records company history)")
+	public ResponseEntity<VesselDto> assignCompany(@PathVariable Long id, @Valid @RequestBody VesselAssignRequestDto request) {
+		try {
+			return ResponseEntity.ok(vesselService.assignToCompany(id, request.getId()));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@PostMapping("/{id}/master")
+	@PreAuthorize("hasRole('MANAGER')")
+	@Operation(summary = "Assign a master (ROLE_VESSEL user) to a vessel")
+	public ResponseEntity<VesselDto> assignMaster(@PathVariable Long id, @Valid @RequestBody VesselAssignRequestDto request) {
+		try {
+			return ResponseEntity.ok(vesselService.assignMaster(id, request.getId()));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@PostMapping("/{id}/token/regenerate")
+	@PreAuthorize("hasRole('MANAGER')")
+	@Operation(summary = "Regenerate vessel access token")
+	public ResponseEntity<VesselDto> regenerateToken(@PathVariable Long id) {
+		try {
+			return ResponseEntity.ok(vesselService.regenerateAccessToken(id));
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
 }

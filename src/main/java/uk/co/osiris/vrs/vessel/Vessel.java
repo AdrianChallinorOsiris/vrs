@@ -13,6 +13,8 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import uk.co.osiris.vrs.company.Company;
+import uk.co.osiris.vrs.users_roles.UserAccount;
 
 import java.time.LocalDateTime;
 
@@ -38,6 +40,17 @@ public class Vessel {
 
 	@Column(nullable = false)
 	private boolean active = true;
+
+	@Column(name = "access_token", nullable = false, unique = true, length = 64)
+	private String accessToken;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "current_company_id")
+	private Company currentCompany;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "master_id")
+	private UserAccount master;
 
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;

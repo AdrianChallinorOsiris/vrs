@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface VesselRepository extends JpaRepository<Vessel, Long> {
 
 	Optional<Vessel> findByImoNumber(String imoNumber);
+
+	Optional<Vessel> findByAccessToken(String accessToken);
 }

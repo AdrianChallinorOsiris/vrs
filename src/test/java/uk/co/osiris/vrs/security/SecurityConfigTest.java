@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.autoconfigure.web.DataWebAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.co.osiris.vrs.company.AdminCompanyController;
@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         UserCompanyController.class,
         AdminCompanyController.class
 })
+@TestPropertySource(properties = "jwt.secret=test-secret-key-must-be-at-least-32-chars-long-for-hmac")
 class SecurityConfigTest {
 
     @Autowired
@@ -64,13 +65,13 @@ class SecurityConfigTest {
     @Test
     void userPathsRequireAuthentication() throws Exception {
         mockMvc.perform(get("/user/v1/companies/1"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void adminPathsRequireAuthentication() throws Exception {
         mockMvc.perform(get("/admin/v1/companies"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

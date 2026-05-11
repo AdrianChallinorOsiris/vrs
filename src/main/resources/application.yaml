@@ -22,3 +22,6 @@ spring:
     schemas: vrs
     default-schema: vrs
     baseline-on-migrate: true
+
+jwt:
+  secret: vrs-jwt-secret-key-must-be-at-least-32-chars-long-for-hmac-sha
